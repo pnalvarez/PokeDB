@@ -7,7 +7,7 @@ const Logger = require('./logger')
 const app = express()
 const morgan = require('morgan')
 const log = Logger.log
-const pokemon = require('./routes/pokemon')
+const pokemon = require('./routes/pokemons')
 const app2 = require('./app')
 const gamesRouter = require('./routes/games')
 
