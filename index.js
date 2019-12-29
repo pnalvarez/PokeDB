@@ -10,6 +10,8 @@ const log = Logger.log
 const pokemon = require('./routes/pokemons')
 const app2 = require('./app')
 const gamesRouter = require('./routes/games')
+const users = require('./routes/users')
+const Fawn = require('fawn')
 
 console.log('app: ', app.get('env'))
 
@@ -20,6 +22,7 @@ app.use(helmet())
 app.use('/pokemon',pokemon)
 app.use('/games', gamesRouter)
 app.use('/', app2)
+app.use('/users',users)
 
 app.set('view engine', 'pug')
 app.set('views', './views')

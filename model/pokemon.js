@@ -1,15 +1,36 @@
 const Joi = require('joi')
 const mongoose = require('mongoose')
 
-const pokemonSchema = new mongoose.Schema({
-                                            name: {type: String, required: true, minlength: 3}
-                                          })
-const Pokemon = mongoose.model('Pokemon', pokemonSchema)
+const trainerSchema = new mongoose.Schema({
+    name: {type: String, required: true, minlength: 5},
+    age: Number,
+    pokemonNumber: {type: Number,
+                    validate: v => {return v >= 0 && v < 7},
+                    required: true
+                   }
+})
 
-const createPokemon = async (name) => {
+const pokemonSchema = new mongoose.Schema({
+         name: {type: String, required: true, minlength: 3},
+         pokeType: {type: String,
+                    enum: ['water', 'fire', 'grass'],
+                    default: 'water',
+                    required: true
+                    },
+        trainer: {
+                    type: trainerSchema,
+                    required: true
+        }
+})
+
+const Pokemon = mongoose.model('Pokemon', pokemonSchema)
+const Trainer = mongoose.model('Trainer', trainerSchema)
+
+const createPokemon = async (name, trainer) => {
     console.log('pokemon is', name)
     const pokemon = new Pokemon({
-        name: name
+        name: name,
+        trainer: trainer
     })
     try {
         const result = await pokemon.save()
@@ -42,7 +63,15 @@ const deletePokemon = async (id) => {
     return result
 }
 
+async function createTrainers() {
+    const trainer1 = new Trainer({name: 'Pedro', 'age': 25, 'pokemonNumber': 2})
+    const result = await trainer1.save()
+}
+
+createTrainers()
+
 module.exports.Pokemon = Pokemon
+module.exports.Trainer = Trainer
 module.exports.updatePokemon = updatePokemon
 module.exports.deletePokemon = deletePokemon
 module.exports.pokemonExists = pokemonExists
