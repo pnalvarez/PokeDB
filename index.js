@@ -12,6 +12,7 @@ const app2 = require('./app')
 const gamesRouter = require('./routes/games')
 const users = require('./routes/users')
 const auth = require('./routes/auth')
+require('./prod')(app)
 const Fawn = require('fawn')
 
 if(!config.get('jwtPrivateKey')){
@@ -30,6 +31,7 @@ app.use('/games', gamesRouter)
 app.use('/', app2)
 app.use('/users',users)
 app.use('/auth', auth)
+app.use()
 
 app.set('view engine', 'pug')
 app.set('views', './views')
