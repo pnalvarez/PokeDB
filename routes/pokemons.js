@@ -1,6 +1,8 @@
+const auth = require('../middleware/auth')
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const admin = require('../middleware/admin')
 const { Pokemon,
        Trainer,
        createPokemon,
@@ -38,16 +40,11 @@ router.get('/:id', async (req,res)=>{
     res.status(400).send('Pokemon not found')
 })
 
-router.post('',async (req,res)=>{
-    const trainerId = req.body.trainerId
-    const trainer = await Trainer.findById(trainerId)
+router.post('',auth, async (req,res)=>{
 
-    if(!trainer){
-        return res.status(400).send('Trainer not found')
-    }
     const pokemon = new Pokemon({name: req.body.name,
-                                 pokeType: req.body.pokeType,
-                                 trainer: trainer})
+                                 pokeType: req.body.pokeType
+                                })
             
     try {
         const result = await pokemon.save()
@@ -63,17 +60,18 @@ router.put('/:id',async (req,res)=>{
 
     const id = req.params.id
     const name = req.body.name
+    const pokeType = req.body.pokeType
     const exists = await pokemonExists(id)
 
     if(!exists){
         res.status(400).send('Pokemon does not exist')
         return
     }
-    const result = await updatePokemon(id, name)
+    const result = await updatePokemon(id, name, pokeType)
     res.status(200).send(result)
 })
 
-router.delete('/:id',async (req,res)=>{
+router.delete('/:id',[auth,admin],async (req,res)=>{
     const id = req.params.id
     console.log(id)
     const exists = await pokemonExists(id)

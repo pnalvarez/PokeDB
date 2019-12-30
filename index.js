@@ -1,5 +1,5 @@
-const express = require('express')
 const config = require('config')
+const express = require('express')
 const helmet = require('helmet')
 const startupDebugger = require('debug')('app:startup')
 const dbDebugger = require('debug')('app:db')
@@ -13,6 +13,11 @@ const gamesRouter = require('./routes/games')
 const users = require('./routes/users')
 const auth = require('./routes/auth')
 const Fawn = require('fawn')
+
+if(!config.get('jwtPrivateKey')){
+    console.error('jwt Private Key is not defined')
+    process.exit(1)
+}
 
 console.log('app: ', app.get('env'))
 

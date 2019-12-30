@@ -18,8 +18,7 @@ const pokemonSchema = new mongoose.Schema({
                     required: true
                     },
         trainer: {
-                    type: trainerSchema,
-                    required: true
+                    type: trainerSchema
         }
 })
 
@@ -53,8 +52,11 @@ const pokemonExists =  async (id) => {
     return false
 }
 
-const updatePokemon = async (id, name) => {
-    const pokemon = await Pokemon.findByIdAndUpdate(id, {$set: {name: name}})
+async function updatePokemon(id, name, pokeType) {
+    const pokemon = await Pokemon.findByIdAndUpdate(id, {$set:
+        {name: name,
+         pokeType: pokeType }
+        })
     return pokemon
 }
 
